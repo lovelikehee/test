@@ -110,7 +110,7 @@ $(function(){
 	}
 
 
-	$('img.responsiveImg').responsive({
+	$('img.js-img-src').responsive({
 		size:[
 			{device:'web',size:null},
 			{device:'mobile',size:768}
