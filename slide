@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌우슬라이더</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script defer src="main.js"></script>
+</head>
+<body>
+    <article id="slider"> 
+        <ul>
+            <li data-index="1">text1</li>
+            <li data-index="2">text2</li>
+            <li data-index="3">text3</li>
+            <li data-index="4">text4</li>
+        </ul>
+    </article>
+    <section class="phone">
+        <article id="slider2">
+            <ul>
+                <li data-index="1">text1</li>
+                <li data-index="2">text2</li>
+                <li data-index="3">text3</li>
+                <li data-index="3">text4</li>
+            </ul>
+        </article>
+    </section>
+    <a href="#" class="prev"><img src="img/btnPrev.png" alt="방향아이콘이미지"></a>
+    <a href="#" class="next"><img src="img/btnNext.png" alt="방향아이콘이미지"></a>
+</body>
+</html>
+
+<!-- //데이터라는 접두사를 통해서 index속성값을 만듬.  -->
+
+/* 
+DOM구조변경 메서드 
+$(선택자).appendTo(부모요소) : 선택자를 부모요소 안에서 제일 뒷쪽에 배치 
+$(선택자).prependTo(부모요소) : 선택자를 부모요소 안에서 제일 앞쪽에 배치 
+*/
+
+var $slider = $("#slider");
+var $slider2 = $("#slider2");
+var $prev = $(".prev");
+var $next = $(".next");
+var speed = 500;
+
+//화면로딩시 ul,li 넓이값과  패널위치값 초기화 함수 호출 
+init($slider);
+init($slider2);
+
+//다음버튼 클릭시  next함수 호출 
+$next.on("click",function(e){
+    e.preventDefault();
+    next($slider);
+    next($slider2);
+})
+
+//이전버튼 클릭시  prev함수 호출 
+$prev.on("click",function(e){
+    e.preventDefault();
+    prev($slider);
+    prev($slider2);
+})
+
+//화면 초기화 함수정의
+function init(el){
+    var len = el.find("li").length;
+    el.children("ul").css({
+        width: 100*len+"%",
+        marginLeft : "-100%",
+        height: "100%"
+    });
+    el.find("li").css({
+        width: 100/len +"%",
+        height: "100%"
+    });
+    el.find("li").last().prependTo(el.children("ul"));
+}
+
+//next이동 함수정의
+function next(el){
+    el.find("ul").animate({marginLeft: "-200%"},speed,function(){
+        $(this).find("li").first().appendTo(this);
+        $(this).css({marginLeft:"-100%"});
+    });
+}
+
+//prev이동 함수정의
+function prev(el){
+    el.find("ul").animate({marginLeft: 0},speed,function(){
+        $(this).find("li").last().prependTo(this);
+        $(this).css({marginLeft:"-100%"});
+    });
+}
+
+
+
+
+
+
+
+
+/* 
+DOM구조변경 메서드 
+$(선택자).appendTo(부모요소) : 선택자를 부모요소 안에서 제일 뒷쪽에 배치 
+$(선택자).prependTo(부모요소) : 선택자를 부모요소 안에서 제일 앞쪽에 배치 
+*/
+
+
+var $slider = $("#slider");
+var $prev = $(".prev");
+var $next = $(".next");
+var speed = 500;
+
+
+
+$next.on("click",function(e){
+    e.preventDefault();
+    //동기화시켜야되니까 animate가 끝난 그 순간 또 기능을 넣어준다.
+    $slider.find("ul").animate({marginLeft: "-200%"},speed,function(){
+        $(this).find("li").first().appendTo(this);
+        $(this).css({marginLeft:"-100%"});
+    });
+
+})
+
+$prev.on("click",function(e){
+    e.preventDefault();
+    $slider.find("ul").animate({marginLeft: 0},speed,function(){
+        $(this).find("li").last().prependTo(this);
+        $(this).css({marginLeft:"-100%"});
+    });
+
+})
+
+
+
+@charset "UTF-8";
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+ul, ol, li {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}
+
+#slider {
+    width: 100%; height: 100vh; position: relative; border: 5px solid #000; overflow: hidden;
+}
+
+#slider ul {width: 400%; height: 100%; margin-left:-100%;}
+#slider ul li {width: 25%; height: 100%; float: left;}
+#slider ul li[data-index="1"] {background: lightcyan;} /* data속성값은 문자열로 "" 처리해줘야도됨  */
+#slider ul li[data-index="2"] {background: lemonchiffon;}
+#slider ul li[data-index="3"] {background: #ffd1d8;}
+#slider ul li[data-index="4"] {background: lightgray;}
+.prev{position:absolute;top:50%;left:50px;}
+.next{position:absolute;top:50%;right:50px;}
+
+.phone {width: 450px; height: 787px; position:absolute; top:50%; left:50%; transform: translate(-50%,-50%); background: url(img/bgPhone.png) no-repeat center;}
+.phone #slider2 {width:248px; height: 443px; position: absolute; top:174px; left:99px; overflow: hidden; }
+.phone #slider2 ul li {float:left;}
+.phone #slider2 ul li[data-index="1"] {background: green;} /* data속성값은 문자열로 "" 처리해줘야도됨  */
+.phone #slider2 ul li[data-index="2"] {background: lightcoral;}
+.phone #slider2 ul li[data-index="3"] {background: lightskyblue}
+.phone #slider2 ul li[data-index="4"] {background: royalblue}
